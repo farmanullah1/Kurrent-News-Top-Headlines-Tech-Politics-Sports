@@ -92,7 +92,7 @@ export default class News extends Component {
                   imageUrl={element.urlToImage ? element.urlToImage : "https://images.macrumors.com/t/RQPLZ_3_iMyj3evjsWnMLVwPdyA=/1600x/article-new/2023/11/apple-pay-feature-dynamic-island.jpg"}
                   newsUrl={element.url} 
                   author={element.author}
-                  date={element.publishedAt}
+                  date={element.publishedAt} source={element.source.name}
                 />
               </div>
             )
