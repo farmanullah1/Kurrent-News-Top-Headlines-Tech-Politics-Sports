@@ -3,10 +3,11 @@ import React, { Component } from 'react';
 import Navbar from './components/Navbar';
 import News from './components/News';
 // 1. We import 'Routes' instead of 'Switch'
+import LoadingBar from "react-top-loading-bar";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 
 export default class App extends Component {
-  pageSize = 20;
+  pageSize = 5;
   apiKey = '2e66700f670c47da992598c2989ac04f';
   country = 'us'; 
 
@@ -22,7 +23,12 @@ export default class App extends Component {
     return (
       <Router>
         <div>
+          <LoadingBar
+            color='#f11946'
+            progress={this.state.progress}
+          />
           <Navbar />
+      
           {/* 2. We wrap everything in <Routes> instead of <Switch> */}
           <Routes>
             {/* 3. We pass the component into the element={...} prop */}
