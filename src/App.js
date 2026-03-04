@@ -14,7 +14,7 @@ const App = () => {
   const gNewsKey = "0066682908ed1f1be9b7a82b03ba3906";
   
   const [progress, setProgress] = useState(0);
-  const [country, setCountry] = useState('us'); 
+  const [country, setCountry] = useState('pk'); 
   const [searchQuery, setSearchQuery] = useState(''); 
 
   return (

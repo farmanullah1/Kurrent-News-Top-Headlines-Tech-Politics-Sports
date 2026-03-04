@@ -1,12 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 
-// Accept the new props from App.js
+// 1. DYNAMIC COUNTRY ARRAY (50+ Countries supported by the APIs)
+const countriesList = [
+  { code: 'pk', name: 'Pakistan' },
+  { code: 'us', name: 'United States' },
+  { code: 'gb', name: 'United Kingdom' },
+  { code: 'in', name: 'India' },
+  { code: 'au', name: 'Australia' },
+  { code: 'ca', name: 'Canada' },
+  { code: 'ae', name: 'UAE' },
+  { code: 'sa', name: 'Saudi Arabia' },
+  { code: 'za', name: 'South Africa' },
+  { code: 'nz', name: 'New Zealand' },
+  { code: 'sg', name: 'Singapore' },
+  { code: 'my', name: 'Malaysia' },
+  { code: 'cn', name: 'China' },
+  { code: 'jp', name: 'Japan' },
+  { code: 'kr', name: 'South Korea' },
+  { code: 'ph', name: 'Philippines' },
+  { code: 'th', name: 'Thailand' },
+  { code: 'id', name: 'Indonesia' },
+  { code: 'ru', name: 'Russia' },
+  { code: 'tr', name: 'Turkey' },
+  { code: 'eg', name: 'Egypt' },
+  { code: 'ng', name: 'Nigeria' },
+  { code: 'ar', name: 'Argentina' },
+  { code: 'br', name: 'Brazil' },
+  { code: 'co', name: 'Colombia' },
+  { code: 'mx', name: 'Mexico' },
+  { code: 've', name: 'Venezuela' },
+  { code: 'fr', name: 'France' },
+  { code: 'de', name: 'Germany' },
+  { code: 'it', name: 'Italy' },
+  { code: 'nl', name: 'Netherlands' },
+  { code: 'no', name: 'Norway' },
+  { code: 'pl', name: 'Poland' },
+  { code: 'pt', name: 'Portugal' },
+  { code: 'es', name: 'Spain' },
+  { code: 'se', name: 'Sweden' },
+  { code: 'ch', name: 'Switzerland' },
+  { code: 'ua', name: 'Ukraine' },
+  { code: 'ie', name: 'Ireland' },
+  { code: 'il', name: 'Israel' }
+];
+
 const Navbar = ({ setCountry, setSearchQuery, currentCountry }) => {
   const [theme, setTheme] = useState('light');
   const [time, setTime] = useState(new Date());
-  
-  // Local state to hold what the user is currently typing
   const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
@@ -18,11 +59,13 @@ const Navbar = ({ setCountry, setSearchQuery, currentCountry }) => {
   const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
   const formattedDate = time.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
 
-  // Handle the Search Form submission
   const handleSearch = (e) => {
-    e.preventDefault(); // Prevents the page from refreshing
-    setSearchQuery(searchInput); // Sends the query up to App.js
+    e.preventDefault();
+    setSearchQuery(searchInput);
   };
+
+  // 2. Helper to display the full name of the currently selected country on the button
+  const currentCountryName = countriesList.find(c => c.code === currentCountry)?.name || currentCountry.toUpperCase();
 
   return (
     <div className="fixed-top">
@@ -68,20 +111,26 @@ const Navbar = ({ setCountry, setSearchQuery, currentCountry }) => {
                 <div className="text-muted" style={{fontSize: '0.75rem'}}>{formattedDate}</div>
               </div>
 
-              {/* DYNAMIC COUNTRY SWITCHER */}
+              {/* 3. DYNAMIC SCROLLABLE COUNTRY SWITCHER */}
               <div className="dropdown">
-                <button className="btn btn-sm btn-outline-secondary rounded-pill fw-bold dropdown-toggle px-3 text-uppercase" data-bs-toggle="dropdown">
-                  <i className="fa-solid fa-globe me-1"></i> {currentCountry}
+                <button className="btn btn-sm btn-outline-secondary rounded-pill fw-bold dropdown-toggle px-3" data-bs-toggle="dropdown">
+                  <i className="fa-solid fa-globe me-1"></i> {currentCountryName}
                 </button>
-                <ul className="dropdown-menu dropdown-menu-end shadow-sm min-w-0" style={{minWidth: '80px'}}>
-                  <li><button className="dropdown-item fw-bold" onClick={() => setCountry('us')}>USA</button></li>
-                  <li><button className="dropdown-item fw-bold" onClick={() => setCountry('gb')}>UK</button></li>
-                  <li><button className="dropdown-item fw-bold" onClick={() => setCountry('in')}>India</button></li>
-                  <li><button className="dropdown-item fw-bold" onClick={() => setCountry('au')}>Australia</button></li>
+                {/* Added maxHeight and overflowY so the 40+ countries don't break the screen */}
+                <ul className="dropdown-menu dropdown-menu-end shadow-sm" style={{ minWidth: '150px', maxHeight: '350px', overflowY: 'auto' }}>
+                  {countriesList.map((c) => (
+                    <li key={c.code}>
+                      <button 
+                        className={`dropdown-item fw-bold ${currentCountry === c.code ? 'text-danger bg-light' : ''}`} 
+                        onClick={() => setCountry(c.code)}
+                      >
+                        {c.name}
+                      </button>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
-              {/* FUNCTIONAL SEARCH BAR */}
               <form className="d-flex position-relative" role="search" onSubmit={handleSearch}>
                 <i className="fa-solid fa-search position-absolute text-muted" style={{ top: '10px', left: '12px' }}></i>
                 <input 
