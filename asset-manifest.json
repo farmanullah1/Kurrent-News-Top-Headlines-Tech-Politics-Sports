@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/Kurrent-News-Top-Headlines-Tech-Politics-Sports/static/css/main.e1df6280.css",
-    "main.js": "/Kurrent-News-Top-Headlines-Tech-Politics-Sports/static/js/main.f86d0f50.js",
+    "main.js": "/Kurrent-News-Top-Headlines-Tech-Politics-Sports/static/js/main.8c9d405f.js",
     "static/js/453.49c13d3b.chunk.js": "/Kurrent-News-Top-Headlines-Tech-Politics-Sports/static/js/453.49c13d3b.chunk.js",
     "static/media/loading.gif": "/Kurrent-News-Top-Headlines-Tech-Politics-Sports/static/media/loading.d0af8fb91d7a74b34d3d.gif",
     "index.html": "/Kurrent-News-Top-Headlines-Tech-Politics-Sports/index.html",
     "main.e1df6280.css.map": "/Kurrent-News-Top-Headlines-Tech-Politics-Sports/static/css/main.e1df6280.css.map",
-    "main.f86d0f50.js.map": "/Kurrent-News-Top-Headlines-Tech-Politics-Sports/static/js/main.f86d0f50.js.map",
+    "main.8c9d405f.js.map": "/Kurrent-News-Top-Headlines-Tech-Politics-Sports/static/js/main.8c9d405f.js.map",
     "453.49c13d3b.chunk.js.map": "/Kurrent-News-Top-Headlines-Tech-Politics-Sports/static/js/453.49c13d3b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e1df6280.css",
-    "static/js/main.f86d0f50.js"
+    "static/js/main.8c9d405f.js"
   ]
 }
