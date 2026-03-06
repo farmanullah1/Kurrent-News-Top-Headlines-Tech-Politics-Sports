@@ -215,3 +215,25 @@ body {
   display: flex; align-items: center; justify-content: center;
 }
 .scroll-to-top:hover { transform: translateY(-5px) scale(1.1); }
+.brand-logo-wrapper {
+  transition: all 0.2s ease;
+}
+
+.navbar-brand:hover .brand-logo-wrapper {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(241, 25, 70, 0.25) !important;
+}
+
+.brand-logo-wrapper img {
+  transition: transform 0.25s ease;
+}
+
+.navbar-brand:hover .brand-logo-wrapper img {
+  transform: scale(1.12);
+}
+
+/* Optional: make search input nicer */
+.search-input:focus {
+  box-shadow: 0 0 0 3px rgba(241, 25, 70, 0.25);
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
