@@ -1,12 +1,10 @@
-import React from 'react'
-import loading from './loading.gif'
+import React from 'react';
 
-const Spinner = () => {
-  return (
-    <div className="text-center my-3">
-      <img src={loading} alt="loading spinner" />
-    </div>
-  )
-}
+const Spinner = () => (
+  <div className="kurrent-spinner">
+    <div className="spinner-ring"></div>
+    <span className="spinner-label">Loading</span>
+  </div>
+);
 
 export default Spinner;

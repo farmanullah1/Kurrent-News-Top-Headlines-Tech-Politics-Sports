@@ -1,85 +1,166 @@
 import React, { useState } from 'react';
 
-const NewsItems = (props) => {
-  let { title, description, imageUrl, newsUrl, author, date, source } = props;
-  
-  // Feature: Local Bookmark State
+const FALLBACK_IMG = 'https://fdn.gsmarena.com/imgroot/news/21/08/xiaomi-smart-home-india-annoucnements/-476x249w4/gsmarena_00.jpg';
+
+const NewsItems = ({ title, description, imageUrl, newsUrl, author, date, source }) => {
   const [bookmarked, setBookmarked] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
   const handleImageError = (e) => {
-    e.target.src = 'https://images.macrumors.com/t/RQPLZ_3_iMyj3evjsWnMLVwPdyA=/1600x/article-new/2023/11/apple-pay-feature-dynamic-island.jpg';
+    e.target.src = FALLBACK_IMG;
     e.target.onerror = null;
-  }
+  };
 
-  const formattedDate = new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  
-  // Feature: Calculate mock read time based on description length
-  const readTime = Math.max(1, Math.ceil((description?.length || 100) / 50)); 
-  const comments = Math.floor(Math.random() * 150); // Mock comment counter
+  const formattedDate = date
+    ? new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    : 'Recent';
+
+  const readTime = Math.max(1, Math.ceil((description?.length || 100) / 50));
+  const commentCount = Math.floor(Math.random() * 99) + 1;
+
+  const encodedUrl   = encodeURIComponent(newsUrl  || '');
+  const encodedTitle = encodeURIComponent(title    || '');
+
+  const shareLinks = {
+    twitter:  `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+  };
 
   return (
-    <div className='my-2 h-100'>
-      <div className='card news-card d-flex flex-column'>
-        
-        {/* Floating Category Badge */}
-        <div style={{ position: 'absolute', right: '10px', top: '10px', zIndex: '2' }}>
-          <span className='badge rounded-pill bg-danger shadow px-3 py-2 fw-bold text-uppercase' style={{ letterSpacing: '1px', fontSize: '0.65rem'}}> {source} </span>
-        </div>
+    <div className="my-2 h-100">
+      <div className="card news-card d-flex flex-column">
 
-        {/* Animated Image Wrapper */}
+        {/* Image */}
         <div className="img-wrapper">
-          <img src={!imageUrl ? 'https://fdn.gsmarena.com/imgroot/news/21/08/xiaomi-smart-home-india-annoucnements/-476x249w4/gsmarena_00.jpg' : imageUrl} alt='news thumbnail' onError={handleImageError} />
+          <span className="source-badge">{source || 'News'}</span>
+          <img
+            src={imageUrl || FALLBACK_IMG}
+            alt={title || 'news thumbnail'}
+            onError={handleImageError}
+          />
         </div>
 
-        <div className='card-body d-flex flex-column p-4'>
-          
-          <div className="d-flex justify-content-between text-muted mb-2" style={{ fontSize: '0.8rem' }}>
-            <span className="fw-semibold text-danger"><i className="fa-solid fa-clock me-1"></i> {readTime} min read</span>
-            <span><i className="fa-regular fa-calendar me-1"></i> {formattedDate}</span>
+        {/* Body */}
+        <div className="card-body d-flex flex-column">
+
+          {/* Meta */}
+          <div className="d-flex justify-content-between align-items-center mb-2 card-meta">
+            <span className="read-time">
+              <i className="fa-solid fa-clock me-1"></i>{readTime} min read
+            </span>
+            <span style={{ color: 'var(--text-3)' }}>
+              <i className="fa-regular fa-calendar me-1"></i>{formattedDate}
+            </span>
           </div>
 
-          <h5 className='card-title fw-bolder mb-3 lh-base' style={{ fontSize: '1.15rem' }}>{title}</h5>
-          <p className='card-text text-secondary mb-4 flex-grow-1' style={{ fontSize: '0.9rem' }}>{description}</p>
-          
-          <div className="mt-auto border-top pt-3">
-            <div className="d-flex justify-content-between align-items-center">
-              
-              <div className="d-flex align-items-center gap-2">
-                 <img src={`https://ui-avatars.com/api/?name=${author || 'User'}&background=random&color=fff`} className="rounded-circle" width="30" height="30" alt="author avatar"/>
-                 <small className='fw-bold text-truncate' style={{ maxWidth: '100px' }}>{!author ? 'News Desk' : author}</small>
-              </div>
-              
-              {/* Feature: Interaction Bar */}
-              <div className="d-flex gap-3 fs-5">
-                {/* Mock Comments */}
-                <span className="action-icon" title="Comments"><i className="fa-regular fa-comment"></i><span style={{fontSize:'0.6rem', position:'relative', top:'-8px'}}>{comments}</span></span>
-                
-                {/* SOCIAL SHARING Dropdown */}
-                <div className="dropdown">
-                  <span className="action-icon" data-bs-toggle="dropdown"><i className="fa-solid fa-share-nodes"></i></span>
-                  <ul className="dropdown-menu dropdown-menu-end shadow-sm min-w-0">
-                    <li><a className="dropdown-item" href="/"><i className="fa-brands fa-twitter text-info"></i> Twitter</a></li>
-                    <li><a className="dropdown-item" href="/"><i className="fa-brands fa-whatsapp text-success"></i> WhatsApp</a></li>
-                  </ul>
-                </div>
+          {/* Title */}
+          <h5 className="card-title mb-3">{title?.slice(0, 80) || 'Untitled'}</h5>
 
-                {/* BOOKMARK */}
-                <span className={`action-icon ${bookmarked ? 'bookmarked' : ''}`} onClick={() => setBookmarked(!bookmarked)} title="Bookmark Story">
-                  <i className={bookmarked ? "fa-solid fa-bookmark" : "fa-regular fa-bookmark"}></i>
+          {/* Description */}
+          <p className="card-text mb-3 flex-grow-1">
+            {description?.slice(0, 115) || 'Click to read the full story on the original source.'}
+          </p>
+
+          {/* Author + Actions */}
+          <div className="mt-auto">
+            <div className="d-flex justify-content-between align-items-center pb-3" style={{ borderBottom: '1px solid var(--border)' }}>
+              {/* Author */}
+              <div className="d-flex align-items-center gap-2">
+                <img
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(author || 'News Desk')}&background=f11946&color=fff&size=64&bold=true`}
+                  className="rounded-circle"
+                  width="28" height="28"
+                  alt="author"
+                  style={{ border: '2px solid var(--border)' }}
+                />
+                <small className="fw-bold text-truncate" style={{ maxWidth: 110, fontSize: '.78rem', color: 'var(--text-1)' }}>
+                  {author || 'News Desk'}
+                </small>
+              </div>
+
+              {/* Icon actions */}
+              <div className="d-flex align-items-center gap-3 fs-6">
+                {/* Comments */}
+                <span className="action-icon" title={`${commentCount} comments`}>
+                  <i className="fa-regular fa-comment"></i>
+                  <span style={{ fontSize: '.58rem', position: 'relative', top: '-7px', fontWeight: 700 }}>{commentCount}</span>
+                </span>
+
+                {/* Share toggle */}
+                <span
+                  className="action-icon"
+                  title="Share"
+                  onClick={() => setShareOpen(s => !s)}
+                >
+                  <i className={`fa-solid fa-share-nodes ${shareOpen ? 'grad-text' : ''}`}></i>
+                </span>
+
+                {/* Bookmark */}
+                <span
+                  className={`action-icon ${bookmarked ? 'bookmarked' : ''}`}
+                  onClick={() => setBookmarked(b => !b)}
+                  title={bookmarked ? 'Remove bookmark' : 'Bookmark'}
+                >
+                  <i className={bookmarked ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'}></i>
                 </span>
               </div>
-
             </div>
 
-            <a rel='noreferrer' href={newsUrl} target='_blank' className='btn btn-outline-danger w-100 mt-3 rounded-pill fw-bold'>
-              Read Full Article <i className="fa-solid fa-arrow-right ms-1"></i>
+            {/* Social share row */}
+            {shareOpen && (
+              <div
+                className="share-section d-flex flex-wrap gap-2 pt-3 pb-1"
+                style={{ animation: 'cardEnter .3s var(--spring) both' }}
+              >
+                <a
+                  href={shareLinks.twitter}
+                  target="_blank" rel="noopener noreferrer"
+                  className="share-btn tw"
+                >
+                  <i className="fa-brands fa-x-twitter"></i>Twitter
+                </a>
+                <a
+                  href={shareLinks.linkedin}
+                  target="_blank" rel="noopener noreferrer"
+                  className="share-btn li"
+                >
+                  <i className="fa-brands fa-linkedin-in"></i>LinkedIn
+                </a>
+                <a
+                  href={shareLinks.facebook}
+                  target="_blank" rel="noopener noreferrer"
+                  className="share-btn fb"
+                >
+                  <i className="fa-brands fa-facebook-f"></i>Facebook
+                </a>
+                <a
+                  href={shareLinks.whatsapp}
+                  target="_blank" rel="noopener noreferrer"
+                  className="share-btn wa"
+                >
+                  <i className="fa-brands fa-whatsapp"></i>WhatsApp
+                </a>
+              </div>
+            )}
+
+            {/* CTA */}
+            <a
+              rel="noreferrer"
+              href={newsUrl}
+              target="_blank"
+              className="btn btn-outline-danger w-100 mt-3 rounded-pill fw-bold"
+              style={{ fontSize: '.82rem' }}
+            >
+              <span>Read Full Article</span>{' '}
+              <i className="fa-solid fa-arrow-right ms-1"></i>
             </a>
           </div>
-
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default NewsItems;
